@@ -747,11 +747,13 @@ html:not(.light) input, html:not(.light) select, html:not(.light) textarea {
   .sidebar .sidebar-sign-out-text { display: inline !important; }
   .sidebar .nav-btn { justify-content: flex-start !important; padding-left: 10px !important; padding-right: 10px !important; gap: 10px !important; }
   .sidebar .brand-row { justify-content: flex-start !important; }
-  /* Hide search bar on very small screens */
-  .topbar-search { display: none !important; }
+  /* Keep search visible — just compact it */
+  .topbar-search { max-width: 200px !important; flex-shrink: 1 !important; }
 }
 @media (max-width: 480px) {
-  .topbar { padding: 0 10px; gap: 6px; }
+  .topbar { padding: 0 8px !important; gap: 6px !important; }
+  .topbar-search { max-width: 150px !important; }
+  .topbar-search input { font-size: 12px !important; padding-left: 32px !important; padding-right: 8px !important; }
 }
 /* ── TABLET BREAKPOINT (769px – 1024px) ── */
 @media (min-width: 769px) and (max-width: 1024px) {
@@ -846,9 +848,16 @@ html:not(.light) input, html:not(.light) select, html:not(.light) textarea {
   /* Hide less important columns on small screens via utility class */
   .hide-mobile { display: none !important; }
 }
-/* ── TOPBAR: compact on mobile ── */
-@media (max-width: 480px) {
-  .topbar-theme-picker { display: none !important; }
+/* ── TOPBAR: compact theme picker on mobile — KEEP icons visible, just smaller ── */
+@media (max-width: 540px) {
+  .topbar-theme-picker > div { padding: 2px 3px !important; gap: 0 !important; }
+  .topbar-theme-picker button { width: 26px !important; height: 26px !important; }
+  .topbar-theme-picker button i { font-size: 15px !important; }
+}
+@media (max-width: 400px) {
+  .topbar-theme-picker > div { padding: 2px !important; }
+  .topbar-theme-picker button { width: 22px !important; height: 22px !important; }
+  .topbar-theme-picker button i { font-size: 13px !important; }
 }
 /* ── Footer: stack on mobile ── */
 @media (max-width: 640px) {
@@ -856,10 +865,10 @@ html:not(.light) input, html:not(.light) select, html:not(.light) textarea {
   footer .footer-brand { margin-left: 0 !important; }
   footer { padding: 16px 12px !important; }
 }
-/* ── Calendar: grid on mobile ── */
+/* ── Calendar: grid on mobile — keep event dots, just shrink them ── */
 @media (max-width: 540px) {
   .calendar-day-cell { min-height: 50px !important; }
-  .calendar-event-dot { display: none !important; }
+  .calendar-event-dot { width: 5px !important; height: 5px !important; margin: 1px !important; }
 }
 /* ── Prediction result: 3-col metric strip → 1 col on mobile ── */
 @media (max-width: 480px) {
@@ -885,8 +894,112 @@ body { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 @media (max-width: 640px) {
   .topbar-search { max-width: 140px !important; }
 }
+/* On very tiny phones keep the magnifier + input visible — just shrink it.
+   We refuse to hide the search icon outright. */
 @media (max-width: 400px) {
-  .topbar-search { display: none !important; }
+  .topbar-search { max-width: 110px !important; }
+  .topbar-search input { font-size: 11px !important; padding-left: 28px !important; height: 32px !important; }
+  .topbar-search i { font-size: 11px !important; left: 9px !important; }
+}
+@media (max-width: 360px) {
+  .topbar-search { max-width: 88px !important; }
+  .topbar-search input { padding-left: 26px !important; }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   MOBILE-FRIENDLY UTILITY CLASSES
+   We deliberately hide TEXT LABELS only — never icons.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* Hide a label/text node on small phones, keeping any adjacent icon visible */
+@media (max-width: 540px) {
+  .user-chip-info { display: none !important; }
+}
+@media (max-width: 480px) {
+  .btn-label-hide-xs { display: none !important; }
+  /* Sign-out button on phone becomes icon-only; tooltip still says "Sign Out" */
+  button[title="Sign Out"] { padding: 7px 10px !important; gap: 0 !important; }
+}
+
+/* Right-side topbar group: tighten gaps on phones so nothing overflows */
+@media (max-width: 640px) {
+  .topbar > div:last-child { gap: 6px !important; }
+}
+@media (max-width: 480px) {
+  .topbar > div:last-child { gap: 4px !important; }
+}
+@media (max-width: 380px) {
+  .topbar > div:last-child { gap: 3px !important; }
+  /* Drop the cosmetic separator on the tightest screens so icons can breathe.
+     This is a 1px decorative divider — not a functional icon. */
+  .topbar > div:last-child > div[style*="height:28px"],
+  .topbar > div:last-child > div[style*="height: 28px"] { display: none !important; }
+}
+
+/* ── BUTTONS: shrink padding on phones, NEVER hide their icons ── */
+@media (max-width: 480px) {
+  /* Btn component uses gap:7px, padding:9px 18px — tighten that on phones */
+  .page-header-row button,
+  .student-header button {
+    font-size: 12px !important;
+    padding: 7px 12px !important;
+    gap: 6px !important;
+  }
+  /* Action buttons inside cards keep icons + shrink padding only */
+  div[role="button"], button { min-height: 32px; }
+}
+
+/* ── HEADINGS shrink gracefully on phones ── */
+@media (max-width: 480px) {
+  h3 { font-size: 15px !important; }
+  h4 { font-size: 13px !important; }
+}
+
+/* ── KPI tile numbers: shrink large mono numbers on phones ── */
+@media (max-width: 480px) {
+  /* 28-32px counters become a comfortable 22px (matches rendered kebab-case style) */
+  div[style*="font-family: var(--mono)"][style*="font-size: 28px"],
+  div[style*="font-family: var(--mono)"][style*="font-size: 32px"] {
+    font-size: 22px !important;
+  }
+}
+
+/* ── CARD: tighter padding on phones so content gets more width ── */
+@media (max-width: 480px) {
+  /* Match the Card component's signature rendered inline style and shrink padding */
+  div[style*="border-radius: 14px"][style*="border-left: 5px"] {
+    padding: 14px !important;
+  }
+}
+
+/* ── TABLE: ensure tables stay scrollable rather than wrapping awkwardly ── */
+@media (max-width: 768px) {
+  div[style*="overflow-x: auto"] > table { min-width: max-content; }
+}
+
+/* ── FORM ELEMENT touch targets on phones (excluding compact topbar icon buttons,
+       the sidebar nav, and tiny "sm" buttons which already have generous taps) ── */
+@media (max-width: 480px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  select, textarea {
+    min-height: 38px;
+    font-size: 13px !important;
+  }
+  /* Form-area buttons get a 36px tap area — topbar/sidebar icon buttons stay
+     compact (they're scoped under .topbar / .sidebar) so the chrome doesn't
+     overflow the 56px topbar. */
+  main button { min-height: 36px; }
+}
+
+/* ── SIDEBAR DRAWER: prevent body scroll-lock when drawer open ── */
+@media (max-width: 768px) {
+  body.drawer-open { overflow: hidden; }
+  .sidebar { -webkit-tap-highlight-color: transparent; }
+}
+
+/* ── ALERT/THEME DROPDOWNS on phones: full-width, anchored to top ── */
+@media (max-width: 480px) {
+  .theme-swatch-panel { left: 12px !important; right: 12px !important; min-width: 0 !important; }
 }
 body { font-family: var(--sans); background: var(--bg); color: var(--tx); transition: background .25s, color .25s; }
 input, select, textarea {
@@ -4166,25 +4279,29 @@ const TopBar = ({ alerts, readSet, unreadCount, onAlertClick, onMarkAllRead, glo
       <div style={{ width:1, height:28, background:"var(--bdr)", flexShrink:0 }} />
 
       {/* ── User chip ── */}
-      <div style={{ display:"flex", alignItems:"center", gap:9, flexShrink:0 }}>
+      {/* Avatar is ALWAYS visible. Only the name+dept text collapses on small phones
+          via .user-chip-info — never the avatar icon. */}
+      <div style={{ display:"flex", alignItems:"center", gap:9, flexShrink:0 }} title={`${user.name}${user.dept ? " · " + user.dept : ""}`}>
         {user.profilePic
           ? <img src={user.profilePic} alt={user.name} style={{ width:32, height:32, borderRadius:"50%", objectFit:"cover", flexShrink:0, border:"2px solid var(--primary)" }} />
           : <div style={{ width:32, height:32, borderRadius:"50%", background:"var(--primary)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:12, fontWeight:800, color:"#fff", flexShrink:0 }}>{initials}</div>
         }
-        <div style={{ display:"flex", flexDirection:"column", lineHeight:1.2 }}>
+        <div className="user-chip-info" style={{ display:"flex", flexDirection:"column", lineHeight:1.2 }}>
           <span style={{ fontSize:13, fontWeight:700, color:"var(--tx)" }}>{user.name.split(" ")[0]}</span>
           <span style={{ fontSize:10, color:"var(--tx3)" }}>{user.dept}</span>
         </div>
       </div>
 
       {/* ── Sign Out ── */}
+      {/* Icon is ALWAYS visible. Only the "Sign Out" word collapses on phones
+          via .btn-label-hide-xs — the icon + tooltip remain. */}
       <div style={{ flexShrink:0 }}>
         <button onClick={logout} title="Sign Out"
           style={{ display:"flex", alignItems:"center", gap:6, padding:"7px 12px", borderRadius:8, fontSize:12, fontWeight:600, border:"1px solid var(--bdr)", background:"var(--sur2)", cursor:"pointer", color:"var(--tx2)", transition:"all .2s" }}
           onMouseEnter={e => { e.currentTarget.style.background="rgba(239,68,68,.08)"; e.currentTarget.style.borderColor="#ef4444"; e.currentTarget.style.color="#ef4444"; }}
           onMouseLeave={e => { e.currentTarget.style.background="var(--sur2)"; e.currentTarget.style.borderColor="var(--bdr)"; e.currentTarget.style.color="var(--tx2)"; }}>
           <i className="fa fa-sign-out"></i>
-          Sign Out
+          <span className="btn-label-hide-xs">Sign Out</span>
         </button>
       </div>
 
@@ -8826,6 +8943,30 @@ function App() {
       document.documentElement.style.setProperty("--active-sidebar-w", "0px");
     }
   }, [sidebarCollapsed]);
+
+  // ── Lock body scroll while the mobile drawer is open so users don't feel
+  //    the page sliding underneath, and unlock it as soon as it closes.
+  useEffect(() => {
+    if(typeof document === "undefined") return;
+    if(mobileSidebarOpen) {
+      document.body.classList.add("drawer-open");
+    } else {
+      document.body.classList.remove("drawer-open");
+    }
+    return () => document.body.classList.remove("drawer-open");
+  }, [mobileSidebarOpen]);
+
+  // ── Auto-close the drawer when the viewport grows past the mobile breakpoint
+  //    (e.g. user rotates a tablet from portrait → landscape, or resizes a
+  //    browser window). Prevents a stuck overlay on desktop.
+  useEffect(() => {
+    if(typeof window === "undefined") return;
+    const onResize = () => {
+      if(window.innerWidth > 768 && mobileSidebarOpen) setMobileSidebarOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [mobileSidebarOpen]);
 
   // ── Alerts state ─────────────────────────────────────────────────────────
   const [readSet,    setReadSet]    = useState(new Set()); // set of alert ids that have been read
